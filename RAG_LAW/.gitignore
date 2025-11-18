@@ -1,7 +1,9 @@
 # 깃헙 용량 때문에 제외할 파일들
 *.npy
 *.sqlite3
+.vscode/
 LawDB/
+DATA/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
