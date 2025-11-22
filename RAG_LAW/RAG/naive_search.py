@@ -6,6 +6,7 @@ import chromadb
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 import numpy as np
+import pandas as pd
 from collections import Counter, defaultdict
 
 from embedding import LawEmbeddings
@@ -24,7 +25,7 @@ except ImportError:
     pass
 
 class NaiveSearchEngine():
-    def __init__(self, collection, query_embedding, normalize : bool = True, top_k : int = 5, save_path : str = "FilteredDB"):
+    def __init__(self, collection, query_embedding, normalize : bool = True, top_k : int = 5, save_path : str = "Database/FilteredDB"):
         """
         vector_db의 자료를 기반으로 query와 관련 있는 문서 k개 필터링, 응답 생성
         (Naive RAG)
@@ -100,7 +101,7 @@ class NaiveSearchEngine():
         """유사한 자료들을 모아 저장해둠"""
         self.save_path.mkdir(parents = True, exist_ok = True)
         # 윈도우 금지 문자: \ / : * ? " < > |
-        safe_filename = re.sub(r'[\\/*?:"<>|]', "_", filename)
+        safe_filename = re.sub(r'[\\/*?:"<>|]', "", filename)
         save_path = self.save_path / f"{safe_filename}.pickle"
 
         with open(save_path, "wb") as f:
@@ -111,19 +112,20 @@ class NaiveSearchEngine():
                 "normalize" : self.normalize
             }, f)
             
-    def load_filtered(self, filename : str) -> True:
-        safe_filename = re.sub(r'[\\/*?:"<>|]', "_", filename)
+    def load_filtered(self, filename : str) -> pd.DataFrame:
+        safe_filename = re.sub(r'[\\/*?:"<>|]', "", filename)
         load_path = self.save_path / f"{safe_filename}.pickle"
         if not load_path.exists():
-            return False
+            return None
         with open(load_path, "rb") as f:
             data = pickle.load(f)
-        self.documents = data.get("documents", [])
-        self.metadatas = data.get("metadatas", [])
-        self.embeddings = data.get("embeddings", None)
-        self.normalize = data.get("normalize", True)
-        return True
-
+        combined_data = []
+        for doc, meta in zip(data['documents'], data['metadatas']):
+            row_data = meta.copy()
+            row_data["document"] = doc
+            combined_data.append(row_data)
+        df = pd.DataFrame(combined_data).drop(columns = ["eff_date", "hang_num", "section_type", "jomun_num"])
+        return df
 
 if __name__ == "__main__":
     # 1. ChromaDB 버전 확인
@@ -131,7 +133,7 @@ if __name__ == "__main__":
 
     # 2. 데이터베이스 상태 확인
     project_root = Path("C:/Users/SAMSUNG/Desktop/Grad_School/RAG_LAW")
-    lawdb_path = project_root / "LawDB"
+    lawdb_path = project_root / "Database/LawDB"
 
     client = chromadb.PersistentClient(path=str(lawdb_path))
     collection = client.get_or_create_collection("laws")

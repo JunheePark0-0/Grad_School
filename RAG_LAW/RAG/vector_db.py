@@ -22,8 +22,7 @@ import gc
 import psutil
 
 class LawVectorDB:
-    def __init__(self, vectordb_path : str = "LawDB", vectordb_name : str = "laws"):
-        # current_dir : py_files
+    def __init__(self, vectordb_path : str = "Database/LawDB", vectordb_name : str = "laws"):
         current_dir = Path(__file__).resolve()
         project_dir = current_dir.parent.parent
         self.vectordb_path = project_dir / vectordb_path
@@ -86,7 +85,7 @@ class LawVectorDB:
 
         try:
             # 배치 처리 - 커널 그만 죽어라
-            batch_size = 20 
+            batch_size = 1000
             total_laws = len(documents)
             # 처음 메모리 사용량 확인
             print(f"=== 시작 메모리: {self.get_memory_usage():.1f}MB ===")

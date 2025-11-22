@@ -41,7 +41,7 @@ def create_vectordb():
     """
     # 0. 기존 VectorDB 완전 삭제
     project_root = Path(__file__).resolve().parent.parent
-    vectordb_path = project_root / "LawDB"
+    vectordb_path = project_root / "Database/LawDB"
     
     if vectordb_path.exists():
         print("기존 VectorDB 삭제 중...")
@@ -56,7 +56,7 @@ def create_vectordb():
         print("=== 문서들 로드 중 ===")
         doc_start_time = time.time()
         # 프로젝트 루트 기준으로 경로 설정
-        documents_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "DATA", "laws_parsed.json")
+        documents_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "DATA", "Processed", "laws_parsed.json")
         
         with open(documents_path, "r", encoding = "utf-8") as f:
             documents = json.load(f)
@@ -69,7 +69,7 @@ def create_vectordb():
         print("=== 임베딩 결과 로드 중 ===")
         emb_start_time = time.time()
         # 프로젝트 루트 기준으로 경로 설정
-        embeddings_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "DATA", "laws_embedded.npy")
+        embeddings_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "DATA", "Processed", "laws_embedded.npy")
         embeddings = np.load(embeddings_path)
         
         emb_loading_time = time.time() - emb_start_time
@@ -82,7 +82,7 @@ def create_vectordb():
         # 프로젝트 루트 기준으로 경로 설정
         current_dir = Path(__file__).resolve()
         project_dir = current_dir.parent.parent
-        vector_db_path = Path(os.path.join(project_dir, "LawDB"))
+        vector_db_path = Path(os.path.join(project_dir, "Database", "LawDB"))
         
         if vector_db_path.exists():
             shutil.rmtree(vector_db_path)

@@ -561,7 +561,7 @@ class ParsingAndChunking():
 
 if __name__ == "__main__":
     p_c = ParsingAndChunking()
-    laws_outputs = p_c.parse_and_chunk("Laws", max_len = 250, child_max_len = 200)
+    laws_outputs = p_c.parse_and_chunk("Raw/Laws", max_len = 250, child_max_len = 200)
 
-    with open("DATA/laws_parsed.json", "w", encoding = 'utf-8') as f:
+    with open("DATA/Processed/laws_parsed.json", "w", encoding = 'utf-8') as f:
         json.dump(laws_outputs, f, ensure_ascii = False, indent = 4)
