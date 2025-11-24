@@ -112,6 +112,7 @@ class LawVectorDB:
                         "eff_date" : str(doc.get("law_meta", {}).get("eff_date", "")),
                         "law_path" : str(doc.get("path", "")),
                         "section_type" : str(doc.get("section_type", "")),
+                        "junmun_num" : str(doc.get("junmun_num", "")),
                         "jomun_num" : str(doc.get("jomun_num", "")),
                         "hang_num" : str(doc.get("hang_no", ""))
                     }
