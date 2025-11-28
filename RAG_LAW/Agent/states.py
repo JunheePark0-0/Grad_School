@@ -29,4 +29,7 @@ class LegalAgentState(TypedDict, total = False):
     # 최종 답변
     final_answer : AnswerOutput # 최종 답변
     answer_correct : AnswerCorrect # 최종 답변 적합성 확인
-    retry_count : int # 답변 재생성 횟수 (3회 이상 실패 시 종료)ㄴㄴ
+    retry_count : int # 답변 재생성 횟수 (3회 이상 실패 시 종료)
+
+
+    
